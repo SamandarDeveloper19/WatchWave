@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="RESTFulSense" Version="2.20.0" />
+    <PackageReference Include="STX.EFxceptions.SqlServer" Version="0.1.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
