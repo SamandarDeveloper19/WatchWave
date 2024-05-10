@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WatchWave.Api", "WatchWave.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchWave.Api.Infrastructure.Build", "WatchWave.Api.Infrastructure.Build\WatchWave.Api.Infrastructure.Build.csproj", "{76B6EDF4-7382-40AB-A3B5-E2F97033489A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchWave.Api.Tests.Unit", "WatchWave.Api.Tests.Unit\WatchWave.Api.Tests.Unit.csproj", "{83FEC6C8-7CF7-4F80-9F9B-5F42C8D982AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{76B6EDF4-7382-40AB-A3B5-E2F97033489A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76B6EDF4-7382-40AB-A3B5-E2F97033489A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76B6EDF4-7382-40AB-A3B5-E2F97033489A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83FEC6C8-7CF7-4F80-9F9B-5F42C8D982AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83FEC6C8-7CF7-4F80-9F9B-5F42C8D982AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83FEC6C8-7CF7-4F80-9F9B-5F42C8D982AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83FEC6C8-7CF7-4F80-9F9B-5F42C8D982AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
