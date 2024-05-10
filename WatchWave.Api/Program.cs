@@ -3,6 +3,8 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
+using WatchWave.Api.Brokers.Storages;
+
 namespace WatchWave.Api
 {
     public class Program
@@ -13,6 +15,7 @@ namespace WatchWave.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<StorageBroker>();
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
