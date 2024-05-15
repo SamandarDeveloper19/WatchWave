@@ -8,7 +8,7 @@ using STX.EFxceptions.SqlServer;
 
 namespace WatchWave.Api.Brokers.Storages
 {
-    internal partial class StorageBroker : EFxceptionsContext
+    internal partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {
         private readonly IConfiguration configuration;
 
