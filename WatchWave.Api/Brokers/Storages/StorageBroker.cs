@@ -34,6 +34,13 @@ namespace WatchWave.Api.Brokers.Storages
             return broker.Set<T>();
         }
 
+        public async ValueTask<T> SelectAsync<T>(params object[] objectsId) where T : class
+        {
+            using var broker = new StorageBroker(this.configuration);
+
+            return await broker.FindAsync<T>(objectsId);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString =
