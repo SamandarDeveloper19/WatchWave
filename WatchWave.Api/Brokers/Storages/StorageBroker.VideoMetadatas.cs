@@ -17,5 +17,8 @@ namespace WatchWave.Api.Brokers.Storages
 
         public IQueryable<VideoMetadata> SelectAllVideoMetadatas() =>
             SelectAll<VideoMetadata>();
+
+        public async ValueTask<VideoMetadata> SelectVideoMetadataByIdAsync(Guid videoMetadataId) =>
+            await SelectAsync<VideoMetadata>(videoMetadataId);
     }
 }
