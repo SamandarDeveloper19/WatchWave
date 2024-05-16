@@ -29,8 +29,9 @@ namespace WatchWave.Api.Brokers.Storages
 
         public async ValueTask<T> InsertAsync<T>(T @object)
         {
-            this.Entry(@object).State = EntityState.Added;
-            await this.SaveChangesAsync();
+            using var broker = new StorageBroker(this.configuration);
+            broker.Entry(@object).State = EntityState.Added;
+            await broker.SaveChangesAsync();
 
             return @object;
         }
