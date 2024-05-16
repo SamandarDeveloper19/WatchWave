@@ -3,6 +3,8 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
+using WatchWave.Api.Brokers.Loggings;
+
 namespace WatchWave.Api
 {
     public class Program
@@ -13,6 +15,7 @@ namespace WatchWave.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            AddBrokers(builder);
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -25,6 +28,11 @@ namespace WatchWave.Api
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
+        }
+
+        private static void AddBrokers(WebApplicationBuilder builder)
+        {
+            builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
         }
     }
 }
