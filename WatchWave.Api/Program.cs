@@ -4,6 +4,7 @@
 //==================================================
 
 using WatchWave.Api.Brokers.Loggings;
+using WatchWave.Api.Brokers.Storages;
 
 namespace WatchWave.Api
 {
@@ -32,6 +33,7 @@ namespace WatchWave.Api
 
         private static void AddBrokers(WebApplicationBuilder builder)
         {
+            builder.Services.AddTransient<IStorageBroker, StorageBroker>();
             builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
         }
     }
