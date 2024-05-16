@@ -12,5 +12,6 @@ namespace WatchWave.Api.Brokers.Storages
         ValueTask<VideoMetadata> InsertVideoMetadataAsync(VideoMetadata videoMetadata);
         IQueryable<VideoMetadata> SelectAllVideoMetadatas();
         ValueTask<VideoMetadata> SelectVideoMetadataByIdAsync(Guid videoMetadataId);
+        ValueTask<VideoMetadata> UpdateVideoMetadataAsync(VideoMetadata videoMetadata);
     }
 }
