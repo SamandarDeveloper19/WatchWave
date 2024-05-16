@@ -27,6 +27,15 @@ namespace WatchWave.Api.Brokers.Storages
             optionsBuilder.UseSqlServer(connectionString);
         }
 
+        public async ValueTask<T> InsertAsync<T>(T @object)
+        {
+            using var broker = new StorageBroker(this.configuration);
+            broker.Entry(@object).State = EntityState.Added;
+            await broker.SaveChangesAsync();
+
+            return @object;
+        }
+
         public override void Dispose()
         { }
     }
