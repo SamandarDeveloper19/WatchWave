@@ -18,15 +18,6 @@ namespace WatchWave.Api.Brokers.Storages
             this.Database.Migrate();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string connectionString =
-                configuration.GetConnectionString(name: "DefaultConnection");
-
-            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            optionsBuilder.UseSqlServer(connectionString);
-        }
-
         public async ValueTask<T> InsertAsync<T>(T @object)
         {
             using var broker = new StorageBroker(this.configuration);
@@ -34,6 +25,22 @@ namespace WatchWave.Api.Brokers.Storages
             await broker.SaveChangesAsync();
 
             return @object;
+        }
+
+        public IQueryable<T> SelectAll<T>() where T : class
+        {
+            using var broker = new StorageBroker(this.configuration);
+
+            return broker.Set<T>();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            string connectionString =
+                configuration.GetConnectionString(name: "DefaultConnection");
+
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            optionsBuilder.UseSqlServer(connectionString);
         }
 
         public override void Dispose()
