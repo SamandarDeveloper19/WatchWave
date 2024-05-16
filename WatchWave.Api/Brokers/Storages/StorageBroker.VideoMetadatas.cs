@@ -22,5 +22,8 @@ namespace WatchWave.Api.Brokers.Storages
             await SelectAsync<VideoMetadata>(videoMetadataId);
         public async ValueTask<VideoMetadata> UpdateVideoMetadataAsync(VideoMetadata videoMetadata) =>
             await UpdateAsync(videoMetadata);
+
+        public async ValueTask<VideoMetadata> DeleteVideoMetadataAsync(VideoMetadata videoMetadata) =>
+            await DeleteAsync(videoMetadata);
     }
 }
