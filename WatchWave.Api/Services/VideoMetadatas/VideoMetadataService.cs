@@ -15,9 +15,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 			this.loggingBroker = loggingBroker;
 		}
 
-		public ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata)
-		{
-			throw new NotImplementedException();
-		}
+		public async ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata) =>
+			await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
 	}
 }
