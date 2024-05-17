@@ -7,7 +7,7 @@ using WatchWave.Api.Models.VideoMetadatas;
 
 namespace WatchWave.Api.Brokers.Storages
 {
-    internal partial interface IStorageBroker
+    public partial interface IStorageBroker
     {
         ValueTask<VideoMetadata> InsertVideoMetadataAsync(VideoMetadata videoMetadata);
         IQueryable<VideoMetadata> SelectAllVideoMetadatas();

@@ -14,6 +14,8 @@ namespace WatchWave.Api
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
+            builder.Services.AddTransient<IStorageBroker, StorageBroker>();
+            builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             AddBrokers(builder);
