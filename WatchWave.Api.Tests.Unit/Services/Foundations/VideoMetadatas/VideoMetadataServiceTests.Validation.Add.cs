@@ -29,7 +29,7 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 				addVideoMetadataTask.AsTask());
 
 			this.loggingBrokerMock.Verify(broker =>
-				broker.LogError(It.Is(SameExceptionAs(expectedvideoMetadataValidationException))),
+				broker.LogCritical(It.Is(SameExceptionAs(expectedvideoMetadataValidationException))),
 					Times.Once);
 
 			this.loggingBrokerMock.VerifyNoOtherCalls();

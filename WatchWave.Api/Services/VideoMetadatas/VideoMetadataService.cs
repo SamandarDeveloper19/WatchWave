@@ -4,7 +4,7 @@ using WatchWave.Api.Models.VideoMetadatas;
 
 namespace WatchWave.Api.Services.VideoMetadatas
 {
-	public class VideoMetadataService : IVideoMetadataService
+	public partial class VideoMetadataService : IVideoMetadataService
 	{
 		private readonly IStorageBroker storageBroker;
 		private readonly ILoggingBroker loggingBroker;
@@ -15,7 +15,15 @@ namespace WatchWave.Api.Services.VideoMetadatas
 			this.loggingBroker = loggingBroker;
 		}
 
-		public async ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata) =>
-			await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
+		public ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata) =>
+			TryCatch(async () =>
+			{
+				ValidateVideoMetadata(videoMetadata);
+
+				return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
+			});
+
+
+			
 	}
 }
