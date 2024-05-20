@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Tynamix.ObjectFiller;
@@ -9,6 +10,7 @@ using WatchWave.Api.Brokers.Loggings;
 using WatchWave.Api.Brokers.Storages;
 using WatchWave.Api.Models.VideoMetadatas;
 using WatchWave.Api.Services.VideoMetadatas;
+using Xeptions;
 
 namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 {
@@ -28,6 +30,8 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 				loggingBroker: loggingBrokerMock.Object);
         }
 
+		private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expecteedException) =>
+			actualException => actualException.SameExceptionAs(expecteedException);
 
 		private static VideoMetadata CreateRandomVideoMetadata() =>
 			CreateVideoMetadataFiller(date: GetRandomDateTimeOffset).Create();
