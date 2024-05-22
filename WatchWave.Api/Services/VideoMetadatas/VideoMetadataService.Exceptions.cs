@@ -18,6 +18,10 @@ namespace WatchWave.Api.Services.VideoMetadatas
 			{
 				throw CreateAndLogValidationException(nullVideoMetadataException);
 			}
+			catch(InvalidVideoMetadataException invalidVideoMetadataException)
+			{
+				throw CreateAndLogValidationException(invalidVideoMetadataException);
+			}
 		}
 
 		private VideoMetadataValidationException CreateAndLogValidationException(Xeption exception)
