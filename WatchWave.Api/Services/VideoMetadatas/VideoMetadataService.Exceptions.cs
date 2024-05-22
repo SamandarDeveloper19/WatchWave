@@ -23,7 +23,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 		private VideoMetadataValidationException CreateAndLogValidationException(Xeption exception)
 		{
 			var videoMetadataValidationException = new VideoMetadataValidationException(exception);
-			this.loggingBroker.LogCritical(videoMetadataValidationException);
+			this.loggingBroker.LogError(videoMetadataValidationException);
 			return videoMetadataValidationException;
 		}
 	}
