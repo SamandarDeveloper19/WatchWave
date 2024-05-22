@@ -1,10 +1,10 @@
-﻿using FluentAssertions;
+﻿//==================================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free To Use To Find Comfort and Peace
+//==================================================
+
+using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WatchWave.Api.Models.VideoMetadatas;
 using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 
@@ -17,20 +17,21 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 		{
 			//given
 			VideoMetadata nullVideoMetadata = null;
-			NullVideoMetadataException nullVideoMetadataException = new();
-			
+			NullVideoMetadataException nullVideoMetadataException = new("Video Metadata is null.");
+
 			VideoMetadataValidationException expectedvideoMetadataValidationException =
-				new(nullVideoMetadataException);
+				new("Video Metadata Validation Exception occured, fix the errors and try again.",
+					nullVideoMetadataException);
 			//when
-			ValueTask<VideoMetadata> addVideoMetadataTask = 
+			ValueTask<VideoMetadata> addVideoMetadataTask =
 				this.videoMetadataService.AddVideoMetadataAsync(nullVideoMetadata);
 
 			//then
-			await Assert.ThrowsAsync<VideoMetadataValidationException>(() => 
+			await Assert.ThrowsAsync<VideoMetadataValidationException>(() =>
 				addVideoMetadataTask.AsTask());
 
 			this.loggingBrokerMock.Verify(broker =>
-				broker.LogCritical(It.Is(SameExceptionAs(expectedvideoMetadataValidationException))),
+				broker.LogError(It.Is(SameExceptionAs(expectedvideoMetadataValidationException))),
 					Times.Once);
 
 			this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -44,30 +45,31 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 		public async Task ShouldThrowValidationExceptionOnAddIfVideoMetadataIsInvalidDataAndLogItAsync(string invalidData)
 		{
 			//given
-			var invalidVideoMetadata = new VideoMetadata() 
+			var invalidVideoMetadata = new VideoMetadata()
 			{
 				Title = invalidData
 			};
 
-			InvalidVideoMetadataException invalidVideoMetadataException = new("Video Metadata is invalid");
+			InvalidVideoMetadataException invalidVideoMetadataException = new("Video Metadata is invalid.");
 
 			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.Id),
-				values: "Id is required");
+				values: "Id is required.");
 
 			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.Title),
-				values: "Text is required");
+				values: "Text is required.");
 
 			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.BlobPath),
-				values: "Text is required");
+				values: "Text is required.");
 
 			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.CreatedDate),
-				values: "Date is required");
+				values: "Date is required.");
 
 			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.UpdatedDate),
-				values: "Date is required");
+				values: "Date is required.");
 
 			var expectedVideoMetadataValidationException =
-				new VideoMetadataValidationException(invalidVideoMetadataException);
+				new VideoMetadataValidationException("Video Metadata Validation Exception occured, fix the errors and try again.",
+					invalidVideoMetadataException);
 
 			//when
 			ValueTask<VideoMetadata> addVideoMetadataTask =
@@ -91,7 +93,5 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 			this.loggingBrokerMock.VerifyNoOtherCalls();
 			this.storageBrokerMock.VerifyNoOtherCalls();
 		}
-
-
 	}
 }

@@ -1,10 +1,10 @@
-﻿using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿//==================================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free To Use To Find Comfort and Peace
+//==================================================
+
+using Moq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Tynamix.ObjectFiller;
 using WatchWave.Api.Brokers.Loggings;
 using WatchWave.Api.Brokers.Storages;
@@ -20,15 +20,15 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 		private readonly Mock<ILoggingBroker> loggingBrokerMock;
 		private readonly IVideoMetadataService videoMetadataService;
 
-        public VideoMetadataServiceTests()
-        {
-            this.storageBrokerMock = new Mock<IStorageBroker>();
+		public VideoMetadataServiceTests()
+		{
+			this.storageBrokerMock = new Mock<IStorageBroker>();
 			this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
 			this.videoMetadataService =
 				new VideoMetadataService(storageBroker: storageBrokerMock.Object,
 				loggingBroker: loggingBrokerMock.Object);
-        }
+		}
 
 		private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expecteedException) =>
 			actualException => actualException.SameExceptionAs(expecteedException);

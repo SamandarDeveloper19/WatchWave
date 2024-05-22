@@ -1,4 +1,9 @@
-﻿using WatchWave.Api.Models.VideoMetadatas;
+﻿//==================================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free To Use To Find Comfort and Peace
+//==================================================
+
+using WatchWave.Api.Models.VideoMetadatas;
 using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 using Xeptions;
 
@@ -26,8 +31,13 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 		private VideoMetadataValidationException CreateAndLogValidationException(Xeption exception)
 		{
-			var videoMetadataValidationException = new VideoMetadataValidationException(exception);
+			var videoMetadataValidationException = new VideoMetadataValidationException(
+				"Video Metadata Validation Exception occured, fix the errors and try again.", 
+					exception);
+
 			this.loggingBroker.LogError(videoMetadataValidationException);
+			//this.loggingBroker.LogCritical(videoMetadataValidationException);
+
 			return videoMetadataValidationException;
 		}
 	}

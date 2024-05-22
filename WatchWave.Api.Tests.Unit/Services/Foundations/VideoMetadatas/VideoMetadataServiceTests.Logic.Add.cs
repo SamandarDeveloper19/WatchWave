@@ -1,11 +1,11 @@
-﻿using FluentAssertions;
+﻿//==================================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free To Use To Find Comfort and Peace
+//==================================================
+
+using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WatchWave.Api.Models.VideoMetadatas;
 
 namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas

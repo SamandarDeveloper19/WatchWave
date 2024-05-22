@@ -1,12 +1,16 @@
-﻿using Xeptions;
+﻿//==================================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free To Use To Find Comfort and Peace
+//==================================================
+
+using Xeptions;
 
 namespace WatchWave.Api.Models.VideoMetadatas.Exceptions
 {
 	public class VideoMetadataValidationException : Xeption
 	{
-        public VideoMetadataValidationException(Exception innerException)
-            :base(message: "VideoMetadata Validation Exception occured, fix the errors and try again.",
-                 innerException)
+        public VideoMetadataValidationException(string message, Exception innerException)
+            :base(message, innerException)
         { }
     }
 }
