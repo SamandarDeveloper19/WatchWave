@@ -25,11 +25,11 @@ namespace WatchWave.Api.Services.VideoMetadatas
 			{
 				throw CreateAndLogValidationException(nullVideoMetadataException);
 			}
-			catch(InvalidVideoMetadataException invalidVideoMetadataException)
+			catch (InvalidVideoMetadataException invalidVideoMetadataException)
 			{
 				throw CreateAndLogValidationException(invalidVideoMetadataException);
 			}
-			catch(SqlException sqlException)
+			catch (SqlException sqlException)
 			{
 				FailedVideoMetadataStorageException failedVideoMetadataStorageException =
 					new("Failed Video Metadata storage error occured, please contact support.",
@@ -37,7 +37,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 				throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
 			}
-			catch(DuplicateKeyException duplicateKeyException)
+			catch (DuplicateKeyException duplicateKeyException)
 			{
 				AlreadyExistVideoMetadataException alreadyExistVideoMetadataException
 					= new("Video Metadata already exist, please try again.",
@@ -45,6 +45,25 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 				throw CreateAndLogDuplicateKeyException(alreadyExistVideoMetadataException);
 			}
+			catch (Exception exception)
+			{
+				FailedVideoMetadataServiceException failedVideoMetadataServiceException =
+					new("Unexpected error of Video Metadata occured",
+						exception);
+
+				throw CreateAndLogVideoMetadataDependencyServiceErrorOccurs(failedVideoMetadataServiceException);
+			}
+		}
+
+		private VideoMetadataDependencyServiceException CreateAndLogVideoMetadataDependencyServiceErrorOccurs(Xeption exception)
+		{
+			VideoMetadataDependencyServiceException videoMetadataDependencyServiceException = 
+				new("Unexpected service error occured. Contact support.",
+					exception);
+
+			this.loggingBroker.LogError(videoMetadataDependencyServiceException);
+
+			return videoMetadataDependencyServiceException;
 		}
 
 		private VideoMetadataDependencyValidationException CreateAndLogDuplicateKeyException(Xeption exception)
