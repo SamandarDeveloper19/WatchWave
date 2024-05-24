@@ -1,4 +1,9 @@
-﻿using WatchWave.Api.Brokers.Loggings;
+﻿//==================================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free To Use To Find Comfort and Peace
+//==================================================
+
+using WatchWave.Api.Brokers.Loggings;
 using WatchWave.Api.Brokers.Storages;
 using WatchWave.Api.Models.VideoMetadatas;
 
