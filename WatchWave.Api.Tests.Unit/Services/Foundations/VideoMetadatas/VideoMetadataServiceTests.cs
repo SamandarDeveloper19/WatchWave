@@ -8,6 +8,7 @@ using Moq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
+using WatchWave.Api.Brokers.DateTimes;
 using WatchWave.Api.Brokers.Loggings;
 using WatchWave.Api.Brokers.Storages;
 using WatchWave.Api.Models.VideoMetadatas;
@@ -20,16 +21,20 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 	{
 		private readonly Mock<IStorageBroker> storageBrokerMock;
 		private readonly Mock<ILoggingBroker> loggingBrokerMock;
+		private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
 		private readonly IVideoMetadataService videoMetadataService;
 
 		public VideoMetadataServiceTests()
 		{
 			this.storageBrokerMock = new Mock<IStorageBroker>();
 			this.loggingBrokerMock = new Mock<ILoggingBroker>();
+			this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
 
 			this.videoMetadataService =
-				new VideoMetadataService(storageBroker: storageBrokerMock.Object,
-				loggingBroker: loggingBrokerMock.Object);
+				new VideoMetadataService(
+					storageBroker: storageBrokerMock.Object,
+					loggingBroker: loggingBrokerMock.Object,
+					dateTimeBroker: dateTimeBrokerMock.Object);
 		}
 
 		private static string GetRandomString() =>
