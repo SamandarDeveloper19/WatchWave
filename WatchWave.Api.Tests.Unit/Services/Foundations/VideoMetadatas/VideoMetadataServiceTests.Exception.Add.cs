@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
+using STX.EFxceptions.Abstractions.Models.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,50 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
 			this.loggingBrokerMock.Verify(broker =>
 				broker.LogCritical(It.Is(SameExceptionAs(expectedVideoMetadataDependencyException))),
+					Times.Once);
+
+			this.storageBrokerMock.VerifyNoOtherCalls();
+			this.loggingBrokerMock.VerifyNoOtherCalls();
+		}
+
+		[Fact]
+		public async Task ShouldThrowExceptionAddIfDublicateKeyErrorOccurs()
+		{
+			//given
+			VideoMetadata someVideoMetadata = CreateRandomVideoMetadata();
+			string someString = GetRandomString();
+
+			var duplicateKeyException = new DuplicateKeyException(someString);
+
+			AlreadyExistVideoMetadataException alreadyExistVideoMetadataException =
+				new("Video Metadata already exist, please try again.",
+					duplicateKeyException);
+
+			VideoMetadataDependencyValidationException expectedVideoMetadataDependencyValidationException
+				= new("Video Metadata dependency error occured. Fix errors and try again.",
+					alreadyExistVideoMetadataException);
+
+			this.storageBrokerMock.Setup(broker =>
+				broker.InsertVideoMetadataAsync(someVideoMetadata))
+					.ThrowsAsync(duplicateKeyException);
+
+			//when
+			ValueTask<VideoMetadata> addVideoMetadataTask =
+				this.videoMetadataService.AddVideoMetadataAsync(someVideoMetadata);
+
+			VideoMetadataDependencyValidationException actualVideoMetadataDependencyValidationException =
+				await Assert.ThrowsAnyAsync<VideoMetadataDependencyValidationException>(addVideoMetadataTask.AsTask);
+
+			//then
+			actualVideoMetadataDependencyValidationException.Should().BeEquivalentTo(
+				expectedVideoMetadataDependencyValidationException);
+
+			this.storageBrokerMock.Verify(broker =>
+				broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
+					Times.Once());
+
+			this.loggingBrokerMock.Verify(broker =>
+				broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataDependencyValidationException))),
 					Times.Once);
 
 			this.storageBrokerMock.VerifyNoOtherCalls();

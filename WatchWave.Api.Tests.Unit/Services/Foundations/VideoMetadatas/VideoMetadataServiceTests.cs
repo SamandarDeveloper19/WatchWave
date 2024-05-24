@@ -32,6 +32,9 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 				loggingBroker: loggingBrokerMock.Object);
 		}
 
+		private static string GetRandomString() =>
+			new MnemonicString().GetValue().ToString();
+
 		private static SqlException GetSqlException() =>
 			(SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
