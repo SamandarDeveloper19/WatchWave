@@ -47,9 +47,9 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 			actualException => actualException.SameExceptionAs(expecteedException);
 
 		private static VideoMetadata CreateRandomVideoMetadata() =>
-			CreateVideoMetadataFiller(date: GetRandomDateTimeOffset).Create();
+			CreateVideoMetadataFiller(date: GetRandomDateTimeOffset()).Create();
 
-		private static DateTimeOffset GetRandomDateTimeOffset =>
+		private static DateTimeOffset GetRandomDateTimeOffset() =>
 			new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
 		private static Filler<VideoMetadata> CreateVideoMetadataFiller(DateTimeOffset date)

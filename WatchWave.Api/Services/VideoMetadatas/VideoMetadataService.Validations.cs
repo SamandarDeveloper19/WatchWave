@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
+using System.Data;
 using WatchWave.Api.Models.VideoMetadatas;
 using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 
@@ -19,7 +20,17 @@ namespace WatchWave.Api.Services.VideoMetadatas
 				(Rule: IsInvalid(videoMetadata.Title), Parameter: nameof(VideoMetadata.Title)),
 				(Rule: IsInvalid(videoMetadata.BlobPath), Parameter: nameof(VideoMetadata.BlobPath)),
 				(Rule: IsInvalid(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
-				(Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)));
+				(Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)),
+				(Rule: IsNotRecent(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
+				
+				(Rule: IsNotSame(
+					firstDate: videoMetadata.CreatedDate,
+					secondDate: videoMetadata.UpdatedDate,
+					secondDateName: nameof(videoMetadata.UpdatedDate)),
+				
+				Parameter: nameof(videoMetadata.CreatedDate)));
+
+			
 		}
 
 		private void ValidateVideoMetadataNotNull(VideoMetadata videoMetadata)
@@ -28,6 +39,29 @@ namespace WatchWave.Api.Services.VideoMetadatas
 			{
 				throw new NullVideoMetadataException("Video Metadata is null.");
 			}
+		}
+
+		private static dynamic IsNotSame(
+			DateTimeOffset firstDate,
+			DateTimeOffset secondDate,
+			string secondDateName) => new
+			{
+				Condition = firstDate != secondDate,
+				Message = $"Date is not same as {secondDateName}"
+			};
+
+		private dynamic IsNotRecent(DateTimeOffset date) => new
+		{
+			Condition = IsDateNotRecent(date),
+			Message = "Date is not recent"
+		};
+
+		private bool IsDateNotRecent(DateTimeOffset date)
+		{
+			DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTimeOffset();
+			TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+			return timeDifference.TotalSeconds is > 60 or < 0;
 		}
 
 		private static dynamic IsInvalid(Guid Id) => new

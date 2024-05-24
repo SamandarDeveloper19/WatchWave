@@ -16,10 +16,14 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 		public async Task ShouldAddVideoMetadataAsync()
 		{
 			//given
+			DateTimeOffset randomDate = GetRandomDateTimeOffset();
 			VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
 			VideoMetadata inputVideoMetadata = randomVideoMetadata;
 			VideoMetadata storageVideoMetadata = inputVideoMetadata;
 			VideoMetadata expectedVideoMetadata = storageVideoMetadata.DeepClone();
+
+			this.dateTimeBrokerMock.Setup(broker =>
+				broker.GetCurrentDateTimeOffset()).Returns(randomDate);
 
 			this.storageBrokerMock.Setup(broker =>
 				broker.InsertVideoMetadataAsync(inputVideoMetadata))
@@ -32,12 +36,16 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 			//then
 			actualVideoMetadata.Should().BeEquivalentTo(expectedVideoMetadata);
 
+			this.dateTimeBrokerMock.Verify(broker =>
+				broker.GetCurrentDateTimeOffset(), Times.Once);
+
 			this.storageBrokerMock.Verify(broker =>
 				broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
 					Times.Once());
 
 			this.storageBrokerMock.VerifyNoOtherCalls();
 			this.loggingBrokerMock.VerifyNoOtherCalls();
+			this.dateTimeBrokerMock.VerifyNoOtherCalls();
 		}
 	}
 }

@@ -4,6 +4,7 @@
 //==================================================
 
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using STX.EFxceptions.Abstractions.Models.Exceptions;
 using WatchWave.Api.Models.VideoMetadatas;
 using WatchWave.Api.Models.VideoMetadatas.Exceptions;
@@ -45,6 +46,14 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 				throw CreateAndLogDuplicateKeyException(alreadyExistVideoMetadataException);
 			}
+			catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+			{
+				LockedVideoMetadataException lockedVideoMetadataException = new LockedVideoMetadataException(
+					"Video Metadata is locked, please try again.", 
+						dbUpdateConcurrencyException);
+
+				throw CreateAndLogDependencyValidationException(lockedVideoMetadataException);
+			}
 			catch (Exception exception)
 			{
 				FailedVideoMetadataServiceException failedVideoMetadataServiceException =
@@ -53,6 +62,17 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 				throw CreateAndLogVideoMetadataDependencyServiceErrorOccurs(failedVideoMetadataServiceException);
 			}
+		}
+
+		private VideoMetadataDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+		{
+			var videoMetadataDependencyValidationException = new VideoMetadataDependencyValidationException(
+				"Video Metadata dependency error occured. Fix errors and try again.", 
+					exception);
+			
+			this.loggingBroker.LogError(videoMetadataDependencyValidationException);
+
+			return videoMetadataDependencyValidationException;
 		}
 
 		private VideoMetadataDependencyServiceException CreateAndLogVideoMetadataDependencyServiceErrorOccurs(Xeption exception)

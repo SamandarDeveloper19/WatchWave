@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
+using WatchWave.Api.Brokers.DateTimes;
 using WatchWave.Api.Brokers.Loggings;
 using WatchWave.Api.Brokers.Storages;
 
@@ -37,6 +38,7 @@ namespace WatchWave.Api
         {
             builder.Services.AddTransient<IStorageBroker, StorageBroker>();
             builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
+            builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
         }
     }
 }
