@@ -3,8 +3,10 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
+using Microsoft.Data.SqlClient;
 using Moq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Tynamix.ObjectFiller;
 using WatchWave.Api.Brokers.Loggings;
 using WatchWave.Api.Brokers.Storages;
@@ -29,6 +31,9 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 				new VideoMetadataService(storageBroker: storageBrokerMock.Object,
 				loggingBroker: loggingBrokerMock.Object);
 		}
+
+		private static SqlException GetSqlException() =>
+			(SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
 		private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expecteedException) =>
 			actualException => actualException.SameExceptionAs(expecteedException);
