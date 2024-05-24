@@ -54,6 +54,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 				throw CreateAndLogDependencyValidationException(lockedVideoMetadataException);
 			}
+			
 			catch (Exception exception)
 			{
 				FailedVideoMetadataServiceException failedVideoMetadataServiceException =
@@ -63,6 +64,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 				throw CreateAndLogVideoMetadataDependencyServiceErrorOccurs(failedVideoMetadataServiceException);
 			}
 		}
+
 
 		private VideoMetadataDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
 		{

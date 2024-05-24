@@ -35,9 +35,8 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 				new("Video Metadata dependency exception error occured, please contact support.",
 					failedVideoMetadataStorageException);
 
-			this.storageBrokerMock.Setup(broker =>
-				broker.InsertVideoMetadataAsync(someVideoMetadata))
-					.ThrowsAsync(sqlException);
+			this.dateTimeBrokerMock.Setup(broker =>
+				broker.GetCurrentDateTimeOffset()).Throws(sqlException);
 
 			//when
 			ValueTask<VideoMetadata> AddVideoMetadataTask = 
@@ -49,14 +48,15 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 			//then
 			actualVideoMetadataDependencyException.Should().BeEquivalentTo(expectedVideoMetadataDependencyException);
 
-			this.storageBrokerMock.Verify(broker =>
-				broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
+			this.dateTimeBrokerMock.Verify(broker =>
+				broker.GetCurrentDateTimeOffset(),
 					Times.Once());
 
 			this.loggingBrokerMock.Verify(broker =>
 				broker.LogCritical(It.Is(SameExceptionAs(expectedVideoMetadataDependencyException))),
 					Times.Once);
 
+			this.dateTimeBrokerMock.VerifyNoOtherCalls();
 			this.storageBrokerMock.VerifyNoOtherCalls();
 			this.loggingBrokerMock.VerifyNoOtherCalls();
 		}
@@ -78,9 +78,8 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 				= new("Video Metadata dependency error occured. Fix errors and try again.",
 					alreadyExistVideoMetadataException);
 
-			this.storageBrokerMock.Setup(broker =>
-				broker.InsertVideoMetadataAsync(someVideoMetadata))
-					.ThrowsAsync(duplicateKeyException);
+			this.dateTimeBrokerMock.Setup(broker =>
+				broker.GetCurrentDateTimeOffset()).Throws(duplicateKeyException);
 
 			//when
 			ValueTask<VideoMetadata> addVideoMetadataTask =
@@ -93,14 +92,15 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 			actualVideoMetadataDependencyValidationException.Should().BeEquivalentTo(
 				expectedVideoMetadataDependencyValidationException);
 
-			this.storageBrokerMock.Verify(broker =>
-				broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
+			this.dateTimeBrokerMock.Verify(broker =>
+				broker.GetCurrentDateTimeOffset(),
 					Times.Once());
 
 			this.loggingBrokerMock.Verify(broker =>
 				broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataDependencyValidationException))),
 					Times.Once);
 
+			this.dateTimeBrokerMock.VerifyNoOtherCalls();
 			this.storageBrokerMock.VerifyNoOtherCalls();
 			this.loggingBrokerMock.VerifyNoOtherCalls();
 		}
@@ -152,6 +152,49 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 		}
 
 		[Fact]
+		public async Task ShouldThrowDependencyExceptionOnAddIfDbUpdateErrorOccursAndLogItAsync()
+		{
+			//given
+			VideoMetadata someVideoMetadata = CreateRandomVideoMetadata();
+			var dbUpdateException = new DbUpdateException();
+
+			var failedVideoMetadataStorageException = new FailedVideoMetadataStorageException(
+				"Failed Video Metadata storage error occured, please contact support.",
+					dbUpdateException);
+
+			var expectedVideoMetadataDependencyException = new VideoMetadataDependencyException(
+				"Video Metadata dependency exception error occured, please contact support.",
+					failedVideoMetadataStorageException);
+
+			this.dateTimeBrokerMock.Setup(broker =>
+			   broker.GetCurrentDateTimeOffset())
+				   .Throws(dbUpdateException);
+
+			//when
+			ValueTask<VideoMetadata> addVideoMetadataTask =
+				this.videoMetadataService.AddVideoMetadataAsync(someVideoMetadata);
+
+			VideoMetadataDependencyException actualVideoMetadataDependencyException =
+				await Assert.ThrowsAsync<VideoMetadataDependencyException>(addVideoMetadataTask.AsTask);
+
+			//then
+			actualVideoMetadataDependencyException.Should().BeEquivalentTo(expectedVideoMetadataDependencyException);
+
+			this.dateTimeBrokerMock.Verify(broker =>
+				broker.GetCurrentDateTimeOffset(), Times.Once);
+
+			this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
+				SameExceptionAs(expectedVideoMetadataDependencyException))), Times.Once);
+
+			this.storageBrokerMock.Verify(broker =>
+				broker.UpdateVideoMetadataAsync(It.IsAny<VideoMetadata>()), Times.Never);
+
+			this.dateTimeBrokerMock.VerifyNoOtherCalls();
+			this.storageBrokerMock.VerifyNoOtherCalls();
+			this.loggingBrokerMock.VerifyNoOtherCalls();
+		}
+
+		[Fact]
 		public async Task ShouldThrowExceptionOnAddIfServiceErrorOccurs()
 		{
 			//given
@@ -166,9 +209,8 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 				new("Unexpected service error occured. Contact support.",
 					failedVideoMetadataServiceException);
 
-			this.storageBrokerMock.Setup(broker =>
-				broker.InsertVideoMetadataAsync(someVideoMetadata))
-					.ThrowsAsync(exception);
+			this.dateTimeBrokerMock.Setup(broker =>
+				broker.GetCurrentDateTimeOffset()).Throws(exception);
 
 			//when
 			ValueTask<VideoMetadata> AddVideoMetadataTask = 
@@ -180,14 +222,15 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 			//then
 			actualVideoMetadataDependencyServiceException.Should().BeEquivalentTo(expectedVideoMetadataDependencyServiceException);
 
-			this.storageBrokerMock.Verify(broker =>
-				broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
+			this.dateTimeBrokerMock.Verify(broker =>
+				broker.GetCurrentDateTimeOffset(),
 					Times.Once);
 
 			this.loggingBrokerMock.Verify(broker =>
 				broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataDependencyServiceException))),
 					Times.Once);
 
+			this.dateTimeBrokerMock.VerifyNoOtherCalls();
 			this.storageBrokerMock.VerifyNoOtherCalls();
 			this.loggingBrokerMock.VerifyNoOtherCalls();
 		}
