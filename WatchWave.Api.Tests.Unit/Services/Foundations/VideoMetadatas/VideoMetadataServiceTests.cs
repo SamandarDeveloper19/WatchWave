@@ -20,21 +20,21 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 	public partial class VideoMetadataServiceTests
 	{
 		private readonly Mock<IStorageBroker> storageBrokerMock;
-		private readonly Mock<ILoggingBroker> loggingBrokerMock;
 		private readonly Mock<IDateTimeBroker> dateTimeBrokerMock;
+		private readonly Mock<ILoggingBroker> loggingBrokerMock;
 		private readonly IVideoMetadataService videoMetadataService;
 
 		public VideoMetadataServiceTests()
 		{
 			this.storageBrokerMock = new Mock<IStorageBroker>();
-			this.loggingBrokerMock = new Mock<ILoggingBroker>();
 			this.dateTimeBrokerMock = new Mock<IDateTimeBroker>();
+			this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
 			this.videoMetadataService =
 				new VideoMetadataService(
 					storageBroker: storageBrokerMock.Object,
-					loggingBroker: loggingBrokerMock.Object,
-					dateTimeBroker: dateTimeBrokerMock.Object);
+					dateTimeBroker: dateTimeBrokerMock.Object,
+					loggingBroker: loggingBrokerMock.Object);
 		}
 
 		private static string GetRandomString() =>
@@ -48,6 +48,9 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
 		private static VideoMetadata CreateRandomVideoMetadata() =>
 			CreateVideoMetadataFiller(date: GetRandomDateTimeOffset()).Create();
+
+		private static VideoMetadata CreateRandomVideoMetadata(DateTimeOffset dates) =>
+				CreateVideoMetadataFiller(date: dates).Create();
 
 		private static DateTimeOffset GetRandomDateTimeOffset() =>
 			new DateTimeRange(earliestDate: new DateTime()).GetValue();

@@ -22,20 +22,29 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 			VideoMetadataValidationException expectedvideoMetadataValidationException =
 				new("Video Metadata Validation Exception occured, fix the errors and try again.",
 					nullVideoMetadataException);
+
 			//when
 			ValueTask<VideoMetadata> addVideoMetadataTask =
 				this.videoMetadataService.AddVideoMetadataAsync(nullVideoMetadata);
 
+			VideoMetadataValidationException actualVideoMetadataValidationException =
+				await Assert.ThrowsAsync<VideoMetadataValidationException>(() =>
+					addVideoMetadataTask.AsTask());
+
 			//then
-			await Assert.ThrowsAsync<VideoMetadataValidationException>(() =>
-				addVideoMetadataTask.AsTask());
+			actualVideoMetadataValidationException.Should().BeEquivalentTo(expectedvideoMetadataValidationException);
 
 			this.loggingBrokerMock.Verify(broker =>
 				broker.LogError(It.Is(SameExceptionAs(expectedvideoMetadataValidationException))),
 					Times.Once);
 
+			this.storageBrokerMock.Verify(broker =>
+				broker.InsertVideoMetadataAsync(It.IsAny<VideoMetadata>()),
+					Times.Never);
+
 			this.loggingBrokerMock.VerifyNoOtherCalls();
 			this.storageBrokerMock.VerifyNoOtherCalls();
+			this.dateTimeBrokerMock.VerifyNoOtherCalls();
 		}
 
 		[Theory]
@@ -52,24 +61,30 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
 			InvalidVideoMetadataException invalidVideoMetadataException = new("Video Metadata is invalid.");
 
-			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.Id),
+			invalidVideoMetadataException.AddData(
+				key: nameof(VideoMetadata.Id),
 				values: "Id is required.");
 
-			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.Title),
+			invalidVideoMetadataException.AddData(
+				key: nameof(VideoMetadata.Title),
 				values: "Text is required.");
 
-			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.BlobPath),
+			invalidVideoMetadataException.AddData(
+				key: nameof(VideoMetadata.BlobPath),
 				values: "Text is required.");
 
-			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.CreatedDate),
+			invalidVideoMetadataException.AddData(
+				key: nameof(VideoMetadata.CreatedDate),
 				values: "Date is required.");
 
-			invalidVideoMetadataException.AddData(key: nameof(VideoMetadata.UpdatedDate),
+			invalidVideoMetadataException.AddData(
+				key: nameof(VideoMetadata.UpdatedDate),
 				values: "Date is required.");
 
 			var expectedVideoMetadataValidationException =
-				new VideoMetadataValidationException("Video Metadata Validation Exception occured, fix the errors and try again.",
-					invalidVideoMetadataException);
+				new VideoMetadataValidationException(
+					"Video Metadata Validation Exception occured, fix the errors and try again.",
+						invalidVideoMetadataException);
 
 			//when
 			ValueTask<VideoMetadata> addVideoMetadataTask =

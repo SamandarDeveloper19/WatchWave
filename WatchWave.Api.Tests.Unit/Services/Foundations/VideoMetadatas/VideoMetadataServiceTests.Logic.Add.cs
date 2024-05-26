@@ -17,7 +17,7 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 		{
 			//given
 			DateTimeOffset randomDate = GetRandomDateTimeOffset();
-			VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata();
+			VideoMetadata randomVideoMetadata = CreateRandomVideoMetadata(randomDate);
 			VideoMetadata inputVideoMetadata = randomVideoMetadata;
 			VideoMetadata storageVideoMetadata = inputVideoMetadata;
 			VideoMetadata expectedVideoMetadata = storageVideoMetadata.DeepClone();
@@ -27,7 +27,7 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
 			this.storageBrokerMock.Setup(broker =>
 				broker.InsertVideoMetadataAsync(inputVideoMetadata))
-					.ReturnsAsync(expectedVideoMetadata);
+					.ReturnsAsync(storageVideoMetadata);
 
 			//when
 			VideoMetadata actualVideoMetadata =

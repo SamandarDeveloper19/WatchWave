@@ -33,8 +33,5 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 				return await this.storageBroker.InsertVideoMetadataAsync(videoMetadata);
 			});
-
-
-			
 	}
 }

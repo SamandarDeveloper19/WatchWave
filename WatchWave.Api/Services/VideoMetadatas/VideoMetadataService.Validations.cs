@@ -22,13 +22,14 @@ namespace WatchWave.Api.Services.VideoMetadatas
 				(Rule: IsInvalid(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
 				(Rule: IsInvalid(videoMetadata.UpdatedDate), Parameter: nameof(VideoMetadata.UpdatedDate)),
 				(Rule: IsNotRecent(videoMetadata.CreatedDate), Parameter: nameof(VideoMetadata.CreatedDate)),
-				
+
 				(Rule: IsNotSame(
 					firstDate: videoMetadata.CreatedDate,
 					secondDate: videoMetadata.UpdatedDate,
-					secondDateName: nameof(videoMetadata.UpdatedDate)),
-				
-				Parameter: nameof(videoMetadata.CreatedDate)));
+					secondDateName: nameof(VideoMetadata.UpdatedDate)),
+
+				Parameter: nameof(VideoMetadata.CreatedDate))
+				);
 
 			
 		}

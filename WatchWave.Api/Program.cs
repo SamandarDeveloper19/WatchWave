@@ -6,6 +6,7 @@
 using WatchWave.Api.Brokers.DateTimes;
 using WatchWave.Api.Brokers.Loggings;
 using WatchWave.Api.Brokers.Storages;
+using WatchWave.Api.Services.VideoMetadatas;
 
 namespace WatchWave.Api
 {
@@ -15,11 +16,13 @@ namespace WatchWave.Api
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllers();
+            builder.Services.AddDbContext<StorageBroker>();
             builder.Services.AddTransient<IStorageBroker, StorageBroker>();
             builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
+            builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            AddBrokers(builder);
+            builder.Services.AddTransient<IVideoMetadataService, VideoMetadataService>();
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -32,13 +35,6 @@ namespace WatchWave.Api
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
-        }
-
-        private static void AddBrokers(WebApplicationBuilder builder)
-        {
-            builder.Services.AddTransient<IStorageBroker, StorageBroker>();
-            builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
-            builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
         }
     }
 }
