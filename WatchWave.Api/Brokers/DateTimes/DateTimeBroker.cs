@@ -1,5 +1,4 @@
-﻿
-namespace WatchWave.Api.Brokers.DateTimes
+﻿namespace WatchWave.Api.Brokers.DateTimes
 {
 	public class DateTimeBroker : IDateTimeBroker
 	{

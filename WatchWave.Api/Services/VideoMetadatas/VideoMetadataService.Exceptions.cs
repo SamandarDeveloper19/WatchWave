@@ -15,7 +15,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 	public partial class VideoMetadataService
 	{
 		private delegate ValueTask<VideoMetadata> ReturningVideoMetadataFunction();
-		
+
 		private async ValueTask<VideoMetadata> TryCatch(ReturningVideoMetadataFunction returningVideoMetadataFunction)
 		{
 			try
@@ -32,24 +32,26 @@ namespace WatchWave.Api.Services.VideoMetadatas
 			}
 			catch (SqlException sqlException)
 			{
-				FailedVideoMetadataStorageException failedVideoMetadataStorageException =
-					new("Failed Video Metadata storage error occured, please contact support.",
-						sqlException);
+				var failedVideoMetadataStorageException =
+					new FailedVideoMetadataStorageException(
+						"Failed Video Metadata storage error occured, please contact support.",
+							sqlException);
 
 				throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
 			}
 			catch (DuplicateKeyException duplicateKeyException)
 			{
-				AlreadyExistVideoMetadataException alreadyExistVideoMetadataException
-					= new("Video Metadata already exist, please try again.",
-						duplicateKeyException);
+				var alreadyExistVideoMetadataException
+					= new AlreadyExistsVideoMetadataException(
+						"Video Metadata already exist, please try again.",
+							duplicateKeyException);
 
 				throw CreateAndLogDuplicateKeyException(alreadyExistVideoMetadataException);
 			}
 			catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
 			{
-				LockedVideoMetadataException lockedVideoMetadataException = new LockedVideoMetadataException(
-					"Video Metadata is locked, please try again.", 
+				var lockedVideoMetadataException = new LockedVideoMetadataException(
+					"Video Metadata is locked, please try again.",
 						dbUpdateConcurrencyException);
 
 				throw CreateAndLogDependencyValidationException(lockedVideoMetadataException);
@@ -64,9 +66,10 @@ namespace WatchWave.Api.Services.VideoMetadatas
 			}
 			catch (Exception exception)
 			{
-				FailedVideoMetadataServiceException failedVideoMetadataServiceException =
-					new("Unexpected error of Video Metadata occured",
-						exception);
+				var failedVideoMetadataServiceException =
+					new FailedVideoMetadataServiceException(
+						"Unexpected error of Video Metadata occured",
+							exception);
 
 				throw CreateAndLogVideoMetadataDependencyServiceErrorOccurs(failedVideoMetadataServiceException);
 			}
@@ -86,9 +89,9 @@ namespace WatchWave.Api.Services.VideoMetadatas
 		private VideoMetadataDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
 		{
 			var videoMetadataDependencyValidationException = new VideoMetadataDependencyValidationException(
-				"Video Metadata dependency error occured. Fix errors and try again.", 
+				"Video Metadata dependency error occured. Fix errors and try again.",
 					exception);
-			
+
 			this.loggingBroker.LogError(videoMetadataDependencyValidationException);
 
 			return videoMetadataDependencyValidationException;
@@ -96,9 +99,10 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 		private VideoMetadataDependencyServiceException CreateAndLogVideoMetadataDependencyServiceErrorOccurs(Xeption exception)
 		{
-			VideoMetadataDependencyServiceException videoMetadataDependencyServiceException = 
-				new("Unexpected service error occured. Contact support.",
-					exception);
+			var videoMetadataDependencyServiceException =
+				new VideoMetadataDependencyServiceException(
+					"Unexpected service error occured. Contact support.",
+						exception);
 
 			this.loggingBroker.LogError(videoMetadataDependencyServiceException);
 
@@ -107,9 +111,10 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 		private VideoMetadataDependencyValidationException CreateAndLogDuplicateKeyException(Xeption exception)
 		{
-			VideoMetadataDependencyValidationException videoMetadataDependencyValidationException =
-				new("Video Metadata dependency error occured. Fix errors and try again.",
-					exception);
+			var videoMetadataDependencyValidationException =
+				new VideoMetadataDependencyValidationException(
+					"Video Metadata dependency error occured. Fix errors and try again.",
+						exception);
 			this.loggingBroker.LogError(videoMetadataDependencyValidationException);
 
 			return videoMetadataDependencyValidationException;
@@ -117,9 +122,10 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 		private VideoMetadataDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
 		{
-			VideoMetadataDependencyException videoMetadataDependencyException =
-				new("Video Metadata dependency exception error occured, please contact support.",
-					exception);
+			var videoMetadataDependencyException =
+				new VideoMetadataDependencyException(
+					"Video Metadata dependency exception error occured, please contact support.",
+						exception);
 
 			this.loggingBroker.LogCritical(videoMetadataDependencyException);
 
@@ -129,7 +135,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 		private VideoMetadataValidationException CreateAndLogValidationException(Xeption exception)
 		{
 			var videoMetadataValidationException = new VideoMetadataValidationException(
-				"Video Metadata Validation Exception occured, fix the errors and try again.", 
+				"Video Metadata Validation Exception occured, fix the errors and try again.",
 					exception);
 
 			this.loggingBroker.LogError(videoMetadataValidationException);

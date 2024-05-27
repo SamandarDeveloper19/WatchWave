@@ -7,9 +7,9 @@ using Xeptions;
 
 namespace WatchWave.Api.Models.VideoMetadatas.Exceptions
 {
-	public class AlreadyExistVideoMetadataException : Xeption
+	public class AlreadyExistsVideoMetadataException : Xeption
 	{
-        public AlreadyExistVideoMetadataException(string message, Exception innerException)
+        public AlreadyExistsVideoMetadataException(string message, Exception innerException)
             :base(message, innerException)
         { }
     }

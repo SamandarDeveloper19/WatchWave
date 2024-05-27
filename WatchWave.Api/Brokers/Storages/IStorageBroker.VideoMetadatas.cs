@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
+using System.Runtime.CompilerServices;
 using WatchWave.Api.Models.VideoMetadatas;
 
 namespace WatchWave.Api.Brokers.Storages

@@ -3,7 +3,6 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
-using System.Data;
 using WatchWave.Api.Models.VideoMetadatas;
 using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 
@@ -27,11 +26,8 @@ namespace WatchWave.Api.Services.VideoMetadatas
 					firstDate: videoMetadata.CreatedDate,
 					secondDate: videoMetadata.UpdatedDate,
 					secondDateName: nameof(VideoMetadata.UpdatedDate)),
-
 				Parameter: nameof(VideoMetadata.CreatedDate))
 				);
-
-			
 		}
 
 		private void ValidateVideoMetadataNotNull(VideoMetadata videoMetadata)

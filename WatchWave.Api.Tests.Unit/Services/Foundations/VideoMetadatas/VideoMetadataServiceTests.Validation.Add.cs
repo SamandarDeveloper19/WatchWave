@@ -17,11 +17,12 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 		{
 			//given
 			VideoMetadata nullVideoMetadata = null;
-			NullVideoMetadataException nullVideoMetadataException = new("Video Metadata is null.");
+			var nullVideoMetadataException = new NullVideoMetadataException("Video Metadata is null.");
 
-			VideoMetadataValidationException expectedvideoMetadataValidationException =
-				new("Video Metadata Validation Exception occured, fix the errors and try again.",
-					nullVideoMetadataException);
+			var expectedvideoMetadataValidationException =
+				new VideoMetadataValidationException(
+					"Video Metadata Validation Exception occured, fix the errors and try again.",
+						nullVideoMetadataException);
 
 			//when
 			ValueTask<VideoMetadata> addVideoMetadataTask =
@@ -59,7 +60,7 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 				Title = invalidData
 			};
 
-			InvalidVideoMetadataException invalidVideoMetadataException = new("Video Metadata is invalid.");
+			var invalidVideoMetadataException = new InvalidVideoMetadataException("Video Metadata is invalid.");
 
 			invalidVideoMetadataException.AddData(
 				key: nameof(VideoMetadata.Id),
