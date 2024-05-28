@@ -40,9 +40,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 				return this.storageBroker.SelectAllVideoMetadatas();
 			});
 
-		public ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId)
-		{
-			throw new NotImplementedException();
-		}
+		public async ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId) =>
+			await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
 	}
 }
