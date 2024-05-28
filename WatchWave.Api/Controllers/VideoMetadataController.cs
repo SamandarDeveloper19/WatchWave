@@ -29,5 +29,14 @@ namespace WatchWave.Api.Controllers
 
 			return Created(postedVideoMetadata);
 		}
+
+		[HttpGet]
+		public ActionResult<IQueryable<VideoMetadata>> GetAllVideoMetadatas()
+		{
+			IQueryable<VideoMetadata> gettingAllVideoMetadatas = 
+				this.videoMetadataService.RetrieveAllVideoMetadatas();
+
+			return Ok(gettingAllVideoMetadatas);
+		}
 	}
 }

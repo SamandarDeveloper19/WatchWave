@@ -15,6 +15,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 	public partial class VideoMetadataService
 	{
 		private delegate ValueTask<VideoMetadata> ReturningVideoMetadataFunction();
+		private delegate IQueryable<VideoMetadata> ReturningVideoMetadatasFunction();
 
 		private async ValueTask<VideoMetadata> TryCatch(ReturningVideoMetadataFunction returningVideoMetadataFunction)
 		{
@@ -74,6 +75,33 @@ namespace WatchWave.Api.Services.VideoMetadatas
 				throw CreateAndLogVideoMetadataDependencyServiceErrorOccurs(failedVideoMetadataServiceException);
 			}
 		}
+
+		private IQueryable<VideoMetadata> TryCatch(ReturningVideoMetadatasFunction returningVideoMetadatasFunction)
+		{
+			try
+			{
+				return returningVideoMetadatasFunction();
+			}
+			catch (SqlException sqlException)
+			{
+				FailedVideoMetadataStorageException failedVideoMetadataStorageException =
+					new FailedVideoMetadataStorageException(
+						"Failed Video Metadata storage error occured, please contact support.",
+							sqlException);
+
+				throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
+			}
+			catch(Exception exception)
+			{
+				FailedVideoMetadataServiceException failedVideoMetadataServiceException = 
+					new FailedVideoMetadataServiceException(
+						"Unexpected error of Video Metadata occured.", 
+							exception);
+
+				throw CreateAndLogVideoMetadataDependencyServiceErrorOccurs(failedVideoMetadataServiceException);
+			}
+		}
+		
 
 		private VideoMetadataDependencyException CreateAndLogDependencyException(Xeption exception)
 		{
