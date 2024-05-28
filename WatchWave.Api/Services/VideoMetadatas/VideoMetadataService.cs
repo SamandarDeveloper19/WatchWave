@@ -35,6 +35,9 @@ namespace WatchWave.Api.Services.VideoMetadatas
 			});
 
 		public IQueryable<VideoMetadata> RetrieveAllVideoMetadatas() =>
-			this.storageBroker.SelectAllVideoMetadatas();
+			TryCatch(() =>
+			{
+				return this.storageBroker.SelectAllVideoMetadatas();
+			});
 	}
 }
