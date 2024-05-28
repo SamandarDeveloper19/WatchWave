@@ -8,7 +8,7 @@ using WatchWave.Api.Models.VideoMetadatas;
 
 namespace WatchWave.Api.Brokers.Storages
 {
-    internal partial class StorageBroker
+    public partial class StorageBroker
     {
         public DbSet<VideoMetadata> VideoMetadatas { get; set; }
 
