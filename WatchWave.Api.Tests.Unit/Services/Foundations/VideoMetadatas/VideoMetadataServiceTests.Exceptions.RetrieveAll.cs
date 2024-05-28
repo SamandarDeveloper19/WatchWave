@@ -1,13 +1,11 @@
-﻿using FluentAssertions;
+﻿//==================================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free To Use To Find Comfort and Peace
+//==================================================
+
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WatchWave.Api.Models.VideoMetadatas;
 using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 
 namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
@@ -63,19 +61,19 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 			string exceptionMessage = GetRandomString();
 			var serviceException = new Exception(exceptionMessage);
 
-			FailedVideoMetadataServiceException failedVideoMetadataServiceException = 
+			FailedVideoMetadataServiceException failedVideoMetadataServiceException =
 				new FailedVideoMetadataServiceException(
-					"Unexpected error of Video Metadata occured.", 
+					"Unexpected error of Video Metadata occured.",
 						serviceException);
 
 			VideoMetadataDependencyServiceException expectedVideoMetadataDependencyServiceException =
 				new VideoMetadataDependencyServiceException(
-					"Unexpected service error occured. Contact support.", 
+					"Unexpected service error occured. Contact support.",
 						failedVideoMetadataServiceException);
 
 			this.storageBrokerMock.Setup(broker =>
 				broker.SelectAllVideoMetadatas()).Throws(serviceException);
-			
+
 			//when
 			Action retrieveAllVideoMetadatasAction = () =>
 				this.videoMetadataService.RetrieveAllVideoMetadatas();
