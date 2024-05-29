@@ -40,7 +40,7 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             this.storageBrokerMock.Verify(broker =>
                 broker.SelectVideoMetadataByIdAsync(videoMetadataId),
-                    Times.Never());
+                    Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateVideoMetadataAsync(inputVideoMetadata),
