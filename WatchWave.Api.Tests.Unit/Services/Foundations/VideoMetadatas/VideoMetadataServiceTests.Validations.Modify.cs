@@ -21,7 +21,7 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
-                    message: "Video Metadata Validation Exception occurred, fix the errors and try again.",
+                    message: "Video Metadata Validation Exception occured, fix the errors and try again.",
                     innerException: nullVideoMetadataException);
 
             // when
