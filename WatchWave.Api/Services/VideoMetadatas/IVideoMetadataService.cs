@@ -7,10 +7,11 @@ using WatchWave.Api.Models.VideoMetadatas;
 
 namespace WatchWave.Api.Services.VideoMetadatas
 {
-	public interface IVideoMetadataService
-	{
-		ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata);
-		IQueryable<VideoMetadata> RetrieveAllVideoMetadatas();
-		ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId);
-	}
+    public interface IVideoMetadataService
+    {
+        ValueTask<VideoMetadata> AddVideoMetadataAsync(VideoMetadata videoMetadata);
+        IQueryable<VideoMetadata> RetrieveAllVideoMetadatas();
+        ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId);
+        ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata);
+    }
 }
