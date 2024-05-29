@@ -55,10 +55,21 @@ namespace WatchWave.Api.Controllers
 		[HttpGet]
 		public ActionResult<IQueryable<VideoMetadata>> GetAllVideoMetadatas()
 		{
-			IQueryable<VideoMetadata> gettingAllVideoMetadatas = 
+			try
+			{
+				IQueryable<VideoMetadata> gettingAllVideoMetadatas =
 				this.videoMetadataService.RetrieveAllVideoMetadatas();
 
-			return Ok(gettingAllVideoMetadatas);
+				return Ok(gettingAllVideoMetadatas);
+			}
+			catch (VideoMetadataDependencyException videoMetadataDependencyException)
+			{
+				return InternalServerError(videoMetadataDependencyException);
+			}
+			catch(VideoMetadataDependencyServiceException videoMetadataDependencyServiceException)
+			{
+				return InternalServerError(videoMetadataDependencyServiceException);
+			}
 		}
 	}
 }
