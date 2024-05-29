@@ -3,6 +3,8 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
+using System.Data;
+using System.Reflection.Metadata;
 using WatchWave.Api.Models.VideoMetadatas;
 using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 
@@ -29,6 +31,9 @@ namespace WatchWave.Api.Services.VideoMetadatas
 				Parameter: nameof(VideoMetadata.CreatedDate))
 				);
 		}
+
+		public void ValidateVideoMetadataId(Guid videoMetadataId) =>
+			Validate((Rule: IsInvalid(videoMetadataId), Parameter: nameof(VideoMetadata.Id)));
 
 		private void ValidateVideoMetadataNotNull(VideoMetadata videoMetadata)
 		{
@@ -81,7 +86,8 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 		private static void Validate(params (dynamic Rule, string Parameter)[] validations)
 		{
-			var invalidVideoMetadataException = new InvalidVideoMetadataException(message: "Video Metadata is invalid.");
+			var invalidVideoMetadataException = new InvalidVideoMetadataException(
+				message: "Video Metadata is invalid.");
 
 			foreach ((dynamic rule, string parameter) in validations)
 			{

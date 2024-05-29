@@ -3,6 +3,7 @@
 // Free To Use To Find Comfort and Peace
 //==================================================
 
+using FluentAssertions;
 using WatchWave.Api.Brokers.DateTimes;
 using WatchWave.Api.Brokers.Loggings;
 using WatchWave.Api.Brokers.Storages;
@@ -40,7 +41,15 @@ namespace WatchWave.Api.Services.VideoMetadatas
 				return this.storageBroker.SelectAllVideoMetadatas();
 			});
 
-		public async ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId) =>
-			await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
+		public ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId) =>
+			TryCatch(async () =>
+			{
+				ValidateVideoMetadataId(videoMetadataId);
+
+				VideoMetadata maybeVideoMetadata = 
+					await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
+
+				return maybeVideoMetadata;
+			});
 	}
 }
