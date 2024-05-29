@@ -173,9 +173,13 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
                 new InvalidVideoMetadataException(
                     message: "Video Metadata is invalid.");
 
+            invalidVideoMetadataException.AddData(
+                key: nameof(VideoMetadata.CreatedDate),
+                values: $"Date is not same as {nameof(VideoMetadata.CreatedDate)}");
+
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
-                    message: "Vidoe Metadata Validation Exception occured, fix the errors and try again.",
+                    message: "Video Metadata Validation Exception occured, fix the errors and try again.",
                     innerException: invalidVideoMetadataException);
 
             this.storageBrokerMock.Setup(broker =>

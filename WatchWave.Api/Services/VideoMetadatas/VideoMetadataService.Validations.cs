@@ -46,6 +46,13 @@ namespace WatchWave.Api.Services.VideoMetadatas
         private void ValidateAgainstStorageOnModify(VideoMetadata inputVideoMetadata, VideoMetadata maybeVideoMetadata)
         {
             ValidateStorageVideoMetadata(maybeVideoMetadata, inputVideoMetadata.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    inputVideoMetadata.CreatedDate,
+                    maybeVideoMetadata.CreatedDate,
+                    nameof(VideoMetadata.CreatedDate)),
+                Parameter: nameof(VideoMetadata.CreatedDate)));
         }
 
         public void ValidateVideoMetadataId(Guid videoMetadataId) =>
