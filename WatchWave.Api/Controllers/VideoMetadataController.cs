@@ -6,6 +6,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using WatchWave.Api.Models.VideoMetadatas;
+using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 using WatchWave.Api.Services.VideoMetadatas;
 
 namespace WatchWave.Api.Controllers
@@ -24,10 +25,31 @@ namespace WatchWave.Api.Controllers
 		[HttpPost]
 		public async ValueTask<ActionResult<VideoMetadata>> PostVideoMetadataAsync(VideoMetadata videoMetadata)
 		{
-			VideoMetadata postedVideoMetadata = 
+			try
+			{
+				VideoMetadata postedVideoMetadata =
 				await this.videoMetadataService.AddVideoMetadataAsync(videoMetadata);
 
-			return Created(postedVideoMetadata);
+				return Created(postedVideoMetadata);
+			}
+			catch (VideoMetadataValidationException videoMetadataValidationException)
+			{
+				return BadRequest(videoMetadataValidationException.InnerException);
+			}
+			catch(VideoMetadataDependencyValidationException videoMetadataDependencyValidationException)
+				when(videoMetadataDependencyValidationException.InnerException is 
+					AlreadyExistsVideoMetadataException)
+			{
+				return Conflict(videoMetadataDependencyValidationException.InnerException);
+			}
+			catch(VideoMetadataDependencyException videoMetadataDependencyException)
+			{
+				return InternalServerError(videoMetadataDependencyException);
+			}
+			catch(VideoMetadataDependencyServiceException videoMetadataDependencyServiceException)
+			{
+				return InternalServerError(videoMetadataDependencyServiceException);
+			}
 		}
 	}
 }
