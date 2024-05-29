@@ -39,7 +39,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 		{
 			if(maybeVideoMetadata is null)
 			{
-				throw new NotFoundVidoeMetadataException(
+				throw new NotFoundVideoMetadataException(
 					$"Couldn't find video metadata with id {videoMetadataId}");
 			}
 		}
