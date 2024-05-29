@@ -13,5 +13,6 @@ namespace WatchWave.Api.Services.VideoMetadatas
         IQueryable<VideoMetadata> RetrieveAllVideoMetadatas();
         ValueTask<VideoMetadata> RetrieveVideoMetadataByIdAsync(Guid videoMetadataId);
         ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata);
+        ValueTask<VideoMetadata> RemoveVideoMetadataByIdAsync(Guid videoMetadataId);
     }
 }
