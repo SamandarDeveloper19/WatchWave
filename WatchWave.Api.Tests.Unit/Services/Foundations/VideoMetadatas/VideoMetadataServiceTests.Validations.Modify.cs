@@ -63,23 +63,23 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.Id),
-                values: "Id is required");
+                values: "Id is required.");
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.Title),
-                values: "Text is required");
+                values: "Text is required.");
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.BlobPath),
-                values: "Text is required");
+                values: "Text is required.");
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.CreatedDate),
-                values: "Date is required");
+                values: "Date is required.");
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.UpdatedDate),
-                values: "Date is required");
+                values: "Date is required.");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
