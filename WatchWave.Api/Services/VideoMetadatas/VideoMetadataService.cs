@@ -53,9 +53,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
                 return maybeVideoMetadata;
             });
 
-        public ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata)
-        {
-            throw new NotImplementedException();
-        }
+        public async ValueTask<VideoMetadata> ModifyVideoMetadataAsync(VideoMetadata videoMetadata) =>
+            await this.storageBroker.UpdateVideoMetadataAsync(videoMetadata);
     }
 }
