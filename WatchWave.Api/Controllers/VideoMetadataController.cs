@@ -6,6 +6,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using WatchWave.Api.Models.VideoMetadatas;
+using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 using WatchWave.Api.Services.VideoMetadatas;
 
 namespace WatchWave.Api.Controllers
@@ -33,10 +34,21 @@ namespace WatchWave.Api.Controllers
 		[HttpGet]
 		public ActionResult<IQueryable<VideoMetadata>> GetAllVideoMetadatas()
 		{
-			IQueryable<VideoMetadata> gettingAllVideoMetadatas = 
+			try
+			{
+				IQueryable<VideoMetadata> gettingAllVideoMetadatas =
 				this.videoMetadataService.RetrieveAllVideoMetadatas();
 
-			return Ok(gettingAllVideoMetadatas);
+				return Ok(gettingAllVideoMetadatas);
+			}
+			catch (VideoMetadataDependencyException videoMetadataDependencyException)
+			{
+				return InternalServerError(videoMetadataDependencyException);
+			}
+			catch(VideoMetadataDependencyServiceException videoMetadataDependencyServiceException)
+			{
+				return InternalServerError(videoMetadataDependencyServiceException);
+			}
 		}
 	}
 }
