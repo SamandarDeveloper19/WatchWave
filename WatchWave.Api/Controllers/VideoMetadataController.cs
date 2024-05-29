@@ -6,6 +6,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
 using WatchWave.Api.Models.VideoMetadatas;
+using WatchWave.Api.Models.VideoMetadatas.Exceptions;
 using WatchWave.Api.Services.VideoMetadatas;
 
 namespace WatchWave.Api.Controllers
@@ -37,6 +38,35 @@ namespace WatchWave.Api.Controllers
 				this.videoMetadataService.RetrieveAllVideoMetadatas();
 
 			return Ok(gettingAllVideoMetadatas);
+		}
+
+		[HttpGet("{videoMetadataId}")]
+		public async ValueTask<ActionResult<VideoMetadata>> GetVideoMetadataByIdasync(Guid videoMetadataId)
+		{
+			try
+			{
+				VideoMetadata videoMetadata =
+					await this.videoMetadataService.RetrieveVideoMetadataByIdAsync(videoMetadataId);
+
+				return Ok(videoMetadata);
+			}
+			catch (VideoMetadataValidationException videoMetadataValidationException)
+				when(videoMetadataValidationException.InnerException is NotFoundVideoMetadataException)
+			{
+				return NotFound(videoMetadataValidationException.InnerException);
+			}
+			catch(VideoMetadataValidationException videoMetadataValidationException)
+			{
+				return BadRequest(videoMetadataValidationException.InnerException);
+			}
+			catch(VideoMetadataDependencyException videoMetadataDependencyException)
+			{
+				return InternalServerError(videoMetadataDependencyException);
+			}
+			catch(VideoMetadataDependencyServiceException videoMetadataDependencyServiceException)
+			{
+				return InternalServerError(videoMetadataDependencyServiceException);
+			}
 		}
 	}
 }

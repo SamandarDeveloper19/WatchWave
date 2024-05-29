@@ -40,7 +40,7 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 				throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
 			}
-			catch(NotFoundVidoeMetadataException notFoundVidoeMetadataException)
+			catch(NotFoundVideoMetadataException notFoundVidoeMetadataException)
 			{
 				throw CreateAndLogValidationException(notFoundVidoeMetadataException);
 			}
