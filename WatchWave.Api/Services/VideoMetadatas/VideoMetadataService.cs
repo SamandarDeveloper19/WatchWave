@@ -58,6 +58,11 @@ namespace WatchWave.Api.Services.VideoMetadatas
             {
                 ValidateVideoMetadataOnModify(videoMetadata);
 
+                VideoMetadata maybeVideoMetadata =
+                    await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadata.Id);
+
+                ValidateAgainstStorageOnModify(videoMetadata, maybeVideoMetadata);
+
                 return await this.storageBroker.UpdateVideoMetadataAsync(videoMetadata);
             });
     }
