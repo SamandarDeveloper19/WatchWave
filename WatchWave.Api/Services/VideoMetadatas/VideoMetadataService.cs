@@ -68,7 +68,10 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
         public async ValueTask<VideoMetadata> RemoveVideoMetadataByIdAsync(Guid videoMetadataId)
         {
-            throw new NotImplementedException();
+            VideoMetadata maybeVideoMetadata =
+                await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
+
+            return await this.storageBroker.DeleteVideoMetadataAsync(maybeVideoMetadata);
         }
     }
 }
