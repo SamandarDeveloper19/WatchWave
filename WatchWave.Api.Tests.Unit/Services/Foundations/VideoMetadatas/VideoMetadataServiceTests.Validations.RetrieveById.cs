@@ -1,0 +1,102 @@
+﻿//==================================================
+// Copyright (c) Coalition of Good-Hearted Engineers
+// Free To Use To Find Comfort and Peace
+//==================================================
+
+using FluentAssertions;
+using Moq;
+using WatchWave.Api.Models.VideoMetadatas;
+using WatchWave.Api.Models.VideoMetadatas.Exceptions;
+
+namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
+{
+	public partial class VideoMetadataServiceTests
+	{
+		[Fact]
+		public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfIdIsInvalidAndLogItAsync()
+		{
+			//given
+			var invalidVideoMetadataId = Guid.Empty;
+
+			var invalidVideoMetadataException =
+				new InvalidVideoMetadataException("Video Metadata is invalid.");
+
+			invalidVideoMetadataException.AddData(
+				key: nameof(VideoMetadata.Id),
+				values: "Id is required.");
+
+			var expectedVideoMetadataValidationException = 
+				new VideoMetadataValidationException(
+					"Video Metadata Validation Exception occured, fix the errors and try again.",
+						invalidVideoMetadataException);
+
+			//when
+			ValueTask<VideoMetadata> retrieveByIdVideoMetadataTask =
+				this.videoMetadataService.RetrieveVideoMetadataByIdAsync(invalidVideoMetadataId);
+
+			VideoMetadataValidationException actualVideoMetadataValidationException =
+				await Assert.ThrowsAsync<VideoMetadataValidationException>(
+					retrieveByIdVideoMetadataTask.AsTask);
+
+			//then
+			actualVideoMetadataValidationException.Should().BeEquivalentTo(
+				expectedVideoMetadataValidationException);
+
+			this.loggingBrokerMock.Verify(broker =>
+				broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataValidationException))),
+					Times.Once);
+
+			this.storageBrokerMock.Verify(broker =>
+				broker.SelectVideoMetadataByIdAsync(It.IsAny<Guid>()),
+					Times.Never);
+
+			this.loggingBrokerMock.VerifyNoOtherCalls();
+			this.storageBrokerMock.VerifyNoOtherCalls();
+			this.dateTimeBrokerMock.VerifyNoOtherCalls();
+		}
+
+		[Fact]
+		public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfVideoMetadataIsNotFoundAndLogItAsync()
+		{
+			//given
+			Guid someVideoMetadataId = Guid.NewGuid();
+			VideoMetadata noVideoMetadata = null;
+
+			NotFoundVidoeMetadataException notFoundVidoeMetadataException =
+				new NotFoundVidoeMetadataException($"Couldn't find video metadata with id {someVideoMetadataId}");
+
+			VideoMetadataValidationException expectedVideoMetadataValidationException =
+				new VideoMetadataValidationException(
+					message: "Video Metadata Validation Exception occured, fix the errors and try again.",
+						notFoundVidoeMetadataException);
+
+			this.storageBrokerMock.Setup(broker =>
+				broker.SelectVideoMetadataByIdAsync(It.IsAny<Guid>()))
+					.ReturnsAsync(noVideoMetadata);
+
+			//when
+			ValueTask<VideoMetadata> retrieveByIdVideoMetadataTask =
+				this.videoMetadataService.RetrieveVideoMetadataByIdAsync(someVideoMetadataId);
+
+			VideoMetadataValidationException actualVideoMetadataValidationException =
+				await Assert.ThrowsAsync<VideoMetadataValidationException>(
+					retrieveByIdVideoMetadataTask.AsTask);
+
+			//then
+			actualVideoMetadataValidationException.Should().BeEquivalentTo(
+				expectedVideoMetadataValidationException);
+
+			this.storageBrokerMock.Verify(broker =>
+				broker.SelectVideoMetadataByIdAsync(It.IsAny<Guid>()),
+					Times.Once);
+
+			this.loggingBrokerMock.Verify(broker =>
+				broker.LogError(It.Is(SameExceptionAs(expectedVideoMetadataValidationException))),
+					Times.Once);
+
+			this.storageBrokerMock.VerifyNoOtherCalls();
+			this.loggingBrokerMock.VerifyNoOtherCalls();
+			this.dateTimeBrokerMock.VerifyNoOtherCalls();
+		}
+	}
+}
