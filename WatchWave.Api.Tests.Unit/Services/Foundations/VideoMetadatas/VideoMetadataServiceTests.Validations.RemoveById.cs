@@ -16,14 +16,14 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
         public async Task ShouldThrowValidationExceptionOnRemoveByIdIfIdIsInvalidAndLogItAsync()
         {
             // given
-            Guid videoMetadataId = Guid.NewGuid();
+            Guid videoMetadataId = Guid.Empty;
 
             var invalidVideoMetadataException =
-                new InvalidVideoMetadataException("Video Metadata is null.");
+                new InvalidVideoMetadataException("Video Metadata is invalid.");
 
             invalidVideoMetadataException.AddData(
                 key: nameof(VideoMetadata.Id),
-                values: "Id is required");
+                values: "Id is required.");
 
             var expectedVideoMetadataValidationException =
                 new VideoMetadataValidationException(
