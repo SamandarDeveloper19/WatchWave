@@ -66,12 +66,13 @@ namespace WatchWave.Api.Services.VideoMetadatas
                 return await this.storageBroker.UpdateVideoMetadataAsync(videoMetadata);
             });
 
-        public async ValueTask<VideoMetadata> RemoveVideoMetadataByIdAsync(Guid videoMetadataId)
-        {
-            VideoMetadata maybeVideoMetadata =
-                await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
+        public ValueTask<VideoMetadata> RemoveVideoMetadataByIdAsync(Guid videoMetadataId) =>
+            TryCatch(async () =>
+            {
+                VideoMetadata maybeVideoMetadata =
+                    await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
 
-            return await this.storageBroker.DeleteVideoMetadataAsync(maybeVideoMetadata);
-        }
+                return await this.storageBroker.DeleteVideoMetadataAsync(maybeVideoMetadata);
+            });
     }
 }
