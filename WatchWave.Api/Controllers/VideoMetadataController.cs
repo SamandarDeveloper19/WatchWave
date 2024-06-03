@@ -133,5 +133,38 @@ namespace WatchWave.Api.Controllers
                 return InternalServerError(videoMetadataDependencyServiceException.InnerException);
             }
         }
+
+        [HttpDelete]
+        public async ValueTask<ActionResult<VideoMetadata>> DeleteVideoMetadataById(Guid videoMetadataId)
+        {
+            try
+            {
+                VideoMetadata deletedVideoMetadata =
+                    await this.videoMetadataService.RemoveVideoMetadataByIdAsync(videoMetadataId);
+
+                return deletedVideoMetadata;
+            }
+            catch (VideoMetadataValidationException videoMetadataValidationException)
+                when (videoMetadataValidationException.InnerException is NotFoundVideoMetadataException)
+            {
+                return NotFound(videoMetadataValidationException.InnerException);
+            }
+            catch (VideoMetadataValidationException videoMetadataValidationException)
+            {
+                return BadRequest(videoMetadataValidationException.InnerException);
+            }
+            catch (VideoMetadataDependencyValidationException videoMetadataDependencyValidationException)
+            {
+                return Conflict(videoMetadataDependencyValidationException.InnerException);
+            }
+            catch (VideoMetadataDependencyException videoMetadataDependencyException)
+            {
+                return InternalServerError(videoMetadataDependencyException.InnerException);
+            }
+            catch (VideoMetadataDependencyServiceException videoMetadataDependencyServiceException)
+            {
+                return InternalServerError(videoMetadataDependencyServiceException.InnerException);
+            }
+        }
     }
 }
