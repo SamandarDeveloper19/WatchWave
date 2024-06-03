@@ -74,6 +74,8 @@ namespace WatchWave.Api.Services.VideoMetadatas
                 VideoMetadata maybeVideoMetadata =
                     await this.storageBroker.SelectVideoMetadataByIdAsync(videoMetadataId);
 
+                ValidateStorageVideoMetadata(maybeVideoMetadata, videoMetadataId);
+
                 return await this.storageBroker.DeleteVideoMetadataAsync(maybeVideoMetadata);
             });
     }
