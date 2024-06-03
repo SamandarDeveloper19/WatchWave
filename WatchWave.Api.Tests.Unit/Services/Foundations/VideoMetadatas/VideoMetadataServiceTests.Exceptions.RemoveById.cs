@@ -104,5 +104,51 @@ namespace WatchWave.Api.Tests.Unit.Services.Foundations.VideoMetadatas
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveByIdIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Guid someId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedVideoMetadataServiceException =
+                new FailedVideoMetadataServiceException(
+                    message: "Unexpected error of Video Metadata occured",
+                    innerException: serviceException);
+
+            var expectedVideoMetadataDependencyServiceException =
+                new VideoMetadataDependencyServiceException(
+                    message: "Unexpected service error occured. Contact support.",
+                    innerException: failedVideoMetadataServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectVideoMetadataByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<VideoMetadata> removeVideoMetadataTask =
+                this.videoMetadataService.RemoveVideoMetadataByIdAsync(someId);
+
+            VideoMetadataDependencyServiceException actualVideoMetadataDependencyServiceException =
+                await Assert.ThrowsAsync<VideoMetadataDependencyServiceException>(
+                    removeVideoMetadataTask.AsTask);
+
+            // then
+            actualVideoMetadataDependencyServiceException.Should().BeEquivalentTo(
+                expectedVideoMetadataDependencyServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectVideoMetadataByIdAsync(It.IsAny<Guid>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedVideoMetadataDependencyServiceException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
