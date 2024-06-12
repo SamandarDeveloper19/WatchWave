@@ -95,15 +95,6 @@ namespace WatchWave.Api.Services.VideoMetadatas
 
 				throw CreateAndLogCriticalDependencyException(failedVideoMetadataStorageException);
 			}
-			catch(Exception exception)
-			{
-				FailedVideoMetadataServiceException failedVideoMetadataServiceException = 
-					new FailedVideoMetadataServiceException(
-						"Unexpected error of Video Metadata occured.", 
-							exception);
-
-				throw CreateAndLogVideoMetadataDependencyServiceErrorOccurs(failedVideoMetadataServiceException);
-			}
 		}
 		
 
